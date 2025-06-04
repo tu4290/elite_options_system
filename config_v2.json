@@ -1,0 +1,466 @@
+{
+  "version": "EOTS-APEX-2.5.3-ID_Synchronized-v2.1_Verified",
+  "system_settings": {
+    "log_level": "DEBUG",
+    "data_directory_base": "eots_data_v2_5",
+    "processed_data_subdirectory": "market_snapshots",
+    "thread_pool_size": 4,
+    "historical_data_store_subdirectory": "historical_cache",
+    "performance_data_store_subdirectory": "performance_logs",
+    "visualizer_output_subdirectory": "charts_output",
+    "df_history_maxlen_its": 10,
+    "dashboard_cache_timeout_seconds": 300,
+    "metrics_for_dynamic_threshold_distribution_tracking": [
+      "gib_oi_based_und_eod",
+      "hp_eod_und_eod"
+    ],
+    "log_levels_granular": {
+      "dashboard_v2.callbacks": "DEBUG",
+      "mspi_visualizer_v2": "DEBUG",
+      "elite_options_system_package.mspi_visualization.charts.heatmaps": "DEBUG",
+      "elite_options_system_package.mspi_visualization.charts.component_charts": "DEBUG",
+      "elite_options_system_package.mspi_visualization.charts.derived_metric_charts": "DEBUG",
+      "elite_options_system_package.mspi_visualization.charts.base_chart_utils": "DEBUG",
+      "elite_options_system_package.mspi_visualization.charts.signal_level_charts": "DEBUG",
+      "elite_options_system_package.mspi_visualization.plot_utils": "DEBUG",
+      "data_management.fetcher_convexvalue_v2_5": "INFO",
+      "data_management.fetcher_tradier_v2_5": "INFO",
+      "data_management.enhanced_data_processor_v2": "DEBUG",
+      "core_analytics.integrated_strategies_v2": "DEBUG",
+      "core_analytics.mspi_orchestration_module": "DEBUG",
+      "core_analytics.level_identification_module": "INFO",
+      "core_analytics.signal_generation_module": "INFO",
+      "core_analytics.adaptive_trade_framework_module": "INFO",
+      "core_analytics.system_utilities": "INFO"
+    },
+    "signal_activation_v2_5": {
+      "master_enable_all_raw_signals": true,
+      "adaptive_directional": false,
+      "adaptive_sdag_conviction": false,
+      "volatility_regime_v2_5": false,
+      "enhanced_time_decay_v2_5": false,
+      "predictive_complex_v2_5": false,
+      "vapi_fa_momentum_surge": false,
+      "vapi_fa_exhaustion_divergence": false,
+      "dwfd_smart_money_flow": false,
+      "dwfd_price_divergence": false,
+      "tw_laf_trend_confirmation": false,
+      "vanna_cascade_alert": true,
+      "eod_hedging_flow_imminent": true,
+      "volatility_skew_shift_alert": true,
+      "bubble_mispricing_warning": true
+    }
+  },
+  "api_credentials": {
+    "convexvalue": {
+      "email_env_var": "CONVEX_EMAIL",
+      "password_env_var": "CONVEX_PASSWORD",
+      "email_direct": "YOUR_CV_EMAIL_PLACEHOLDER",
+      "password_direct": "YOUR_CV_PASSWORD_PLACEHOLDER"
+    },
+    "tradier": {
+      "access_token_env_var": "TRADIER_PRODUCTION_TOKEN",
+      "access_token_direct": "YOUR_TRADIER_TOKEN_PLACEHOLDER"
+    }
+  },
+  "data_fetcher_settings": {
+    "convexvalue_fetcher_v2_5": {
+      "retry_config": {
+        "max_retries": 3,
+        "base_delay_seconds": 1.0,
+        "max_delay_seconds": 8.0,
+        "jitter": true
+      },
+      "inter_call_delay_seconds": 0.25,
+      "default_dte_range": [0, 1, 2, 3, 7, 14, 21, 30, 45, 60],
+      "default_price_range_pct": 0.10,
+      "underlying_params_to_fetch": [
+        "price", "volatility", "day_volume", "call_gxoi", "put_gxoi",
+        "gammas_call_buy", "gammas_call_sell", "gammas_put_buy", "gammas_put_sell",
+        "deltas_call_buy", "deltas_call_sell", "deltas_put_buy", "deltas_put_sell",
+        "vegas_call_buy", "vegas_call_sell", "vegas_put_buy", "vegas_put_sell",
+        "thetas_call_buy", "thetas_call_sell", "thetas_put_buy", "thetas_put_sell",
+        "call_vxoi", "put_vxoi", "value_bs", "volm_bs", "deltas_buy", "deltas_sell",
+        "vegas_buy", "vegas_sell", "thetas_buy", "thetas_sell", "volm_call_buy",
+        "volm_put_buy", "volm_call_sell", "volm_put_sell", "value_call_buy",
+        "value_put_buy", "value_call_sell", "value_put_sell", "vflowratio",
+        "dxoi", "gxoi", "vxoi", "txoi", "call_dxoi", "put_dxoi", "charmxoi", "vannaxoi", "vommaxoi"
+      ],
+      "options_chain_params_to_fetch": [
+        "price", "volatility", "multiplier", "oi", "delta", "gamma", "theta", "vega",
+        "vanna", "vomma", "charm", "dxoi", "gxoi", "vxoi", "txoi", "vannaxoi", "vommaxoi", "charmxoi",
+        "dxvolm", "gxvolm", "vxvolm", "txvolm", "vannaxvolm", "vommaxvolm", "charmxvolm",
+        "value_bs", "volm_bs", "deltas_buy", "deltas_sell", "gammas_buy", "gammas_sell",
+        "vegas_buy", "vegas_sell", "thetas_buy", "thetas_sell",
+        "valuebs_5m", "volmbs_5m", "valuebs_15m", "volmbs_15m",
+        "valuebs_30m", "volmbs_30m", "valuebs_60m", "volmbs_60m",
+        "volm", "volm_buy", "volm_sell", "value_buy", "value_sell",
+        "bid_price", "ask_price", "bid_size", "ask_size"
+      ]
+    },
+    "tradier_fetcher_v2_5": {
+      "base_url": "https://api.tradier.com/v1/",
+      "retry_config": {
+        "max_retries": 3,
+        "base_delay_seconds": 1.5,
+        "max_delay_seconds": 12.0,
+        "jitter": true
+      },
+      "ohlcv_num_days_history_default": 90,
+      "iv_approx_target_dte_default": 5,
+      "historical_atr_pct_lookback_trading_days_default": 180,
+      "historical_atr_pct_atr_period_default": 14,
+      "historical_atr_pct_ohlcv_buffer_days_default": 60
+    }
+  },
+  "initial_processor_v2_5_settings": {
+    "perform_strict_column_validation": false,
+    "calculate_base_net_greek_flows_from_chain": true,
+    "calculate_heuristic_pressures_from_chain": true
+  },
+  "data_processor_settings": {
+    "weights": {
+      "selection_logic": "time_based",
+      "time_based_definitions": {
+        "morning_end": "11:00:00",
+        "midday_end": "14:00:00",
+        "market_open": "09:30:00",
+        "market_close": "16:00:00"
+      },
+      "time_based": {
+        "morning": {
+          "dag_custom_norm": 0.15, "tdpi_norm": 0.15, "vri_norm": 0.10,
+          "sdag_multiplicative_norm": 0.05, "sdag_directional_norm": 0.05,
+          "sdag_weighted_norm": 0.05, "sdag_volatility_focused_norm": 0.05,
+          "a_dag_norm": 0.0, "d_tdpi_norm": 0.0, "vri_2_0_norm": 0.0, "e_sdag_composite_norm": 0.0
+        },
+        "midday": {
+          "dag_custom_norm": 0.10, "tdpi_norm": 0.20, "vri_norm": 0.15,
+          "sdag_multiplicative_norm": 0.05, "sdag_directional_norm": 0.05,
+          "sdag_weighted_norm": 0.10, "sdag_volatility_focused_norm": 0.05,
+          "a_dag_norm": 0.0, "d_tdpi_norm": 0.0, "vri_2_0_norm": 0.0, "e_sdag_composite_norm": 0.0
+        },
+        "final": {
+          "dag_custom_norm": 0.05, "tdpi_norm": 0.25, "vri_norm": 0.10,
+          "sdag_multiplicative_norm": 0.05, "sdag_directional_norm": 0.05,
+          "sdag_weighted_norm": 0.10, "sdag_volatility_focused_norm": 0.10,
+          "a_dag_norm": 0.0, "d_tdpi_norm": 0.0, "vri_2_0_norm": 0.0, "e_sdag_composite_norm": 0.0
+        }
+      }
+    }
+  },
+  "metrics_calculator_v2_5_settings": {
+    "strike_column_name_internal": "strike_price",
+    "gamma_exposure_source_col_config_key": "gxoi",
+    "delta_exposure_source_col_config_key": "dxoi",
+    "charm_exposure_source_col_config_key": "charmxoi",
+    "theta_exposure_source_col_config_key": "txoi",
+    "vanna_exposure_source_col_config_key": "vannaxoi",
+    "vega_exposure_source_col_config_key": "vxoi",
+    "vomma_exposure_source_col_config_key": "vommaxoi",
+    "option_iv_source_col_config_key": "volatility",
+    "volume_source_col_config_key": "volm",
+    "option_price_source_col_config_key": "price",
+    "underlying_price_source_key_in_und_data": "price",
+    "contract_multiplier_source_key_in_und_data": "multiplier",
+    "current_iv_source_key_in_und_data": "volatility",
+    "iv_rank_30d_source_key_in_und_data": "iv_percentile_30d",
+    "avg_5day_iv_source_key_in_und_data": "avg_5day_iv_tradier_approx",
+    "avg_90day_iv_source_key_in_und_data": "avg_iv_90day_tradier_approx",
+    "historical_atr_value_source_key_in_und_data": "atr_14d_current_value",
+    "hp_eod_params": {
+      "reference_price_field_in_und_data": "day_open_price_und",
+      "gib_source_field_in_und_data": "gib_oi_based_und"
+    },
+    "adaptive_metric_params": {
+      "a_dag_settings": {
+        "base_dag_alpha_coeffs": {"aligned": 1.35, "opposed": 0.65, "neutral": 1.0},
+        "regime_alpha_multipliers": {"REGIME_STRONG_TRENDING_FLOW_BULLISH": {"aligned_mult": 1.2, "opposed_mult": 0.8}, "REGIME_LOW_VOL_RANGE": {"aligned_mult": 1.0, "opposed_mult": 1.0}},
+        "volatility_context_alpha_multipliers": {"HIGH_IV_STATE": {"aligned_mult": 1.1}},
+        "dte_gamma_flow_impact_scaling": {"0DTE": 1.5, "1-7DTE": 1.0, ">30DTE": 0.7, "8-14DTE": 0.9, "15-30DTE": 0.8},
+        "flow_sensitivity_by_regime": {},
+        "temporal_decay_factor_flow": 0.85,
+        "volume_weight_factor_gex": 0.7,
+        "flow_recency_half_life_periods": 5
+      },
+      "e_sdag_settings": {
+        "use_enhanced_skew_calculation_for_sgexoi": false,
+        "sgexoi_calculation_params": {"skew_sensitivity_to_vri2": 0.1, "term_structure_influence_factor": 0.05, "enhanced_gex_output_col_name": "e_sdag_skew_adjusted_gex"},
+        "base_delta_weight_factors": {"multiplicative": 0.5, "directional": 0.5, "volatility_focused": 0.5},
+        "regime_delta_weight_multipliers": {"REGIME_DELTA_DOMINANT_TREND": {"multiplicative_delta_factor_mult": 1.2}},
+        "methodology_weights_initial": {"multiplicative": 0.25, "directional": 0.25, "weighted": 0.25, "volatility_focused": 0.25},
+        "performance_adaptation_enabled": false,
+        "min_agreement_for_conviction_bonus": 2
+      },
+      "d_tdpi_settings": {
+        "base_tdpi_beta_coeffs": {"aligned": 1.3, "opposed": 0.7, "neutral": 1.0},
+        "base_tdpi_gaussian_width": -0.45,
+        "adaptive_time_weighting_enabled": true,
+        "regime_time_weight_profiles": {"normal_open": [0.9, 1.1], "normal_mid": [1.0, 1.2], "normal_close": [1.1, 1.5], "expiration_open": [1.0, 1.3], "expiration_mid": [1.2, 1.6], "expiration_close": [1.4, 2.0]},
+        "dynamic_gaussian_width_enabled": false,
+        "gaussian_width_vol_sensitivity": 0.05,
+        "gaussian_width_range": [-0.7, -0.2],
+        "expiration_clustering_dte_lookaround": 2,
+        "expiration_clustering_sensitivity": 1.1,
+        "charm_acceleration_sensitivity": 1.05,
+        "charm_acceleration_lookback_periods": 3
+      },
+      "vri_2_0_settings": {
+        "base_vri_gamma_coeffs": {"aligned": 1.3, "opposed": 0.7, "neutral": 1.0},
+        "term_structure_integration_params": {"short_dte_for_slope": 7, "mid_dte_for_slope": 30, "slope_weight": 0.2},
+        "volatility_surface_dynamics_params": {"surface_change_lookback": 5, "surface_change_sensitivity": 0.15},
+        "vomma_enhancement_params": {"vomma_oi_min_for_enhancement": 100000, "enhancement_factor": 1.2},
+        "adaptive_iv_thresholds_enabled": false,
+        "iv_context_percentile_key_for_adaptive_thresh": "iv_percentile_30d",
+        "adaptive_iv_low_percentile_base": 30.0,
+        "adaptive_iv_high_percentile_base": 70.0,
+        "adaptive_iv_shift_factor": 0.1,
+        "vol_context_weight_low_iv": 0.9,
+        "vol_context_weight_high_iv": 1.1
+      }
+    },
+    "enhanced_flow_metric_settings": {
+      "vapi_fa_params": {"primary_flow_interval_for_pvr": "5m", "acceleration_calculation_intervals": ["5m", "15m"], "acceleration_method": "current_vs_previous_window_delta", "iv_source_key_for_weighting": "current_iv_und", "final_combination_method": "product", "z_score_lookback_periods_vapi_fa": 100, "min_volume_for_pvr_calc": 10},
+      "dwfd_params": {"directional_flow_proxy_source_col_key": "net_vol_flow_5m_und", "flow_interval_for_components": "5m", "normalization_window_value_flow": 50, "normalization_window_volume_flow": 50, "fvd_component_weight_factor": 0.7, "z_score_lookback_periods_dwfd": 100},
+      "tw_laf_params": {"time_weights_for_intervals": {"5m": 1.0, "15m": 0.8, "30m": 0.6, "60m": 0.4}, "liquidity_factor_calculation": {"spread_source_bid_col_key": "bid_price", "spread_source_ask_col_key": "ask_price", "spread_normalization_method": "relative_to_mid", "historical_spread_lookback_for_norm": 100, "contract_sample_for_und_spread_calc": "atm_and_top_5_oi_each_side", "min_total_volume_for_liquidity_calc": 50}, "z_score_lookback_periods_tw_laf": 100}
+    },
+    "heatmap_generation_settings": {
+      "sgdhp_params": {"proximity_sensitivity_param": 0.025, "flow_confirmation_lookback_interval": "5m", "flow_confirmation_strength_factor": 0.5},
+      "ivsdh_params": {"time_decay_sensitivity_factor_for_charm": 0.05, "vanna_vomma_interaction_weight": 1.0, "charm_vega_interaction_weight": 0.5},
+      "ugch_params": {"greek_weights_for_confluence": {"norm_dxoi_und": 1.5, "norm_gxoi_und": 2.0, "norm_vxoi_und": 1.0, "norm_txoi_und": 0.75, "norm_charmxoi_und": 0.5, "norm_vannaxoi_und": 0.75}}
+    },
+    "atr_calculation_params": {
+      "period": 14,
+      "fallback_settings": {"type": "percentage_of_price", "percentage": 0.01, "min_value": 0.25}
+    }
+  },
+  "ticker_context_analyzer_settings": {
+    "is_primary_index_target": true,
+    "expiration_params": {"recognize_mwf": true, "recognize_eom": true, "recognize_quad": true},
+    "behavioral_pattern_definitions": {"fomc_meeting_day_active": {"time_windows": ["13:45-14:15 ET", "14:30-15:00 ET"]}, "vix_divergence_threshold_pct": 10.0},
+    "intraday_session_definitions": {"OPENING_RUSH": {"start": "09:30:00", "end": "10:15:00"}, "LUNCH_LULL": {"start": "12:00:00", "end": "13:30:00"}, "POWER_HOUR": {"start": "15:00:00", "end": "16:00:00"}},
+    "liquidity_profile_params": {"default_profile": "VERY_HIGH"},
+    "volatility_character_params": {"typical_iv_range_30d_pctile": [15, 85]},
+    "DEFAULT_TICKER_PROFILE": {"is_primary_index_target": false, "expiration_params": {"recognize_mwf": false, "recognize_eom": false, "recognize_quad": false}, "behavioral_pattern_definitions": {}, "intraday_session_definitions": {"OPENING_RUSH": {"start": "09:30:00", "end": "10:00:00"}, "LUNCH_LULL": {"start": "12:30:00", "end": "13:30:00"}, "POWER_HOUR": {"start": "15:00:00", "end": "16:00:00"}}, "liquidity_profiling_params": {"avg_spread_thresholds_pct": {"HIGH": 0.001, "MEDIUM": 0.005}}, "volatility_character_params": {"typical_iv_range_30d_pctile": [20, 80]}}
+  },
+  "market_regime_engine_settings": {
+    "default_regime": "REGIME_UNDEFINED_NEUTRAL",
+    "time_of_day_definitions": {"morning_start": "09:30:00", "morning_end": "11:00:00", "midday_start": "11:00:01", "midday_end": "14:00:00", "afternoon_start": "14:00:01", "afternoon_end": "15:00:00", "final_hour_start": "15:00:01", "market_close": "16:00:00", "eod_pressure_calc_time": "15:15:00"},
+    "eod_reference_price_field_in_und_data": "day_open_price_und",
+    "regime_evaluation_order": ["REGIME_EOD_HEDGING_PRESSURE_STRONG_BUY", "REGIME_EOD_HEDGING_PRESSURE_STRONG_SELL", "REGIME_LOW_VOL_RANGEBOUND_POSITIVE_GIB", "REGIME_LOW_VOL_RANGEBOUND_MODERATE_GIB", "REGIME_CHOPPY_UNCERTAIN_NEGATIVE_GIB_LOW_FLOW_CONVICTION", "REGIME_NEUTRAL_TRANSITIONAL"],
+    "regime_rules": {"REGIME_SPX_0DTE_FRIDAY_PM_EXTREME_PIN_RISK_VCI_CONFIRMED": {"_all_of": [{"ticker_context.is_0DTE_SPX_Friday_PM_eq": true}]}},
+    "dynamic_threshold_definitions": {
+        "gib_extreme_neg_thresh_spy": {"type": "relative_percentile", "metric_source_col": "gib_oi_based_und_eod", "percentile": 5, "lookback_days": 90, "fallback_value": -250000000000.0},
+        "vapi_strong_positive_thresh_default": {"type": "relative_percentile", "metric_source_col": "vapi_fa_z_score_und_avg", "percentile": 90, "lookback_days": 20, "fallback_value": 2.0},
+        "vci_pin_extreme_thresh_spx": {"type": "fixed", "value": 0.8, "fallback_value": 0.8},
+        "d_tdpi_pin_extreme_thresh_spx": {"type": "relative_mean_factor", "metric_source_col": "d_tdpi_atm_strike_value", "factor": 2.5, "lookback_days": 10, "fallback_value": 100000.0}
+    }
+  },
+  "enhanced_metrics": {
+    "enabled": false,
+    "a_dag": {"enabled": false, "output_column_name": "a_dag", "norm_column_name": "a_dag_norm"},
+    "e_sdag": {"enabled": false, "composite_output_column_name": "e_sdag_composite", "composite_norm_column_name": "e_sdag_composite_norm", "conviction_score_output_col_name": "sdag_conviction_score"},
+    "d_tdpi": {"enabled": true, "output_column_name": "d_tdpi", "norm_column_name": "d_tdpi_norm"},
+    "vri_2_0": {"enabled": true, "output_column_name": "vri_2_0", "norm_column_name": "vri_2_0_norm"}
+  },
+  "strategy_settings": {
+    "mspi_col_name_in_aggregated_df": "mspi",
+    "dag_methodologies": {
+        "enabled": ["multiplicative", "directional", "weighted", "volatility_focused"],
+        "use_skew_adjusted_gex_for_original_sdags": false,
+        "skew_adjusted_gex_source_col_name": "sgxoi",
+        "multiplicative": {"delta_weight_factor": 0.5, "weight_in_mspi": 0.20, "plot_in_component_comparison": true, "name_for_plot": "SDAG(M)", "color_config_key": "sdag_multiplicative_norm"},
+        "directional": {"delta_weight_factor": 0.5, "weight_in_mspi": 0.20, "plot_in_component_comparison": true, "name_for_plot": "SDAG(D)", "color_config_key": "sdag_directional_norm"},
+        "weighted": {"w1_gamma":0.6, "w2_delta":0.4, "weight_in_mspi": 0.20, "plot_in_component_comparison": true, "name_for_plot": "SDAG(W)", "color_config_key": "sdag_weighted_norm"},
+        "volatility_focused": {"delta_weight_factor": 0.5, "weight_in_mspi": 0.20, "plot_in_component_comparison": true, "name_for_plot": "SDAG(VF)", "color_config_key": "sdag_volatility_focused_norm"},
+        "min_agreement_for_conviction_signal": 2
+    },
+    "recommendations": {
+      "min_directional_stars_to_issue": 2,
+      "conviction_map_high": 0.8, "conviction_map_high_medium": 0.6,
+      "conviction_map_medium": 0.4, "conviction_map_medium_low": 0.2,
+      "conviction_map_base_one_star": 0.1
+    },
+    "targets": {
+      "target_atr_stop_loss_multiplier": 1.5,
+      "target_atr_target1_multiplier_no_sr": 1.5,
+      "target_atr_target2_multiplier_no_sr": 3.0,
+      "target_atr_target2_multiplier_from_t1": 1.8,
+      "min_target_atr_distance": 0.5
+    },
+    "thresholds": {
+        "sai_high_conviction": 0.6,
+        "ssi_structure_change_percentile": 15.0,
+        "ssi_vol_contraction_percentile": 85.0,
+        "ssi_conviction_split_percentile": 50.0,
+        "cfi_flow_divergence_medium_abs": 1.0,
+        "cfi_flow_divergence_high_abs": 1.5,
+        "vol_expansion_vri_trigger_abs": 0.7,
+        "vol_expansion_vfi_trigger_abs": 0.7,
+        "vol_contraction_vri_trigger_abs": -0.5,
+        "vol_contraction_vfi_trigger_abs": -0.5,
+        "pin_risk_tdpi_trigger_abs": 50000.0,
+        "charm_cascade_ctr_trigger": 1.2,
+        "charm_cascade_tdfi_trigger": 1.2
+    }
+  },
+  "key_level_identifier_settings": {
+    "multi_timeframe_analysis_enabled": true,
+    "dynamic_mspi_base_threshold_for_intraday": 0.3,
+    "dynamic_mspi_threshold_sensitivity_to_iv_rank": 0.2,
+    "daily_level_lookback_periods": 5, "daily_level_persistence_min_count": 2, "daily_level_mspi_strength_min": 0.25,
+    "weekly_level_lookback_periods": 20, "weekly_level_persistence_min_count": 3, "weekly_level_mspi_strength_min": 0.35,
+    "price_interaction_analysis_enabled": false, "price_interaction_lookback_candles": 20, "price_interaction_reaction_threshold_atr_mult": 0.5,
+    "price_interaction_strength_bonus_per_hold": 0.1, "price_interaction_strength_penalty_per_breach": -0.15,
+    "level_clustering_enabled": false, "level_cluster_distance_atr_factor": 0.25,
+    "level_strength_scoring_weights": {"mspi_magnitude": 0.35, "persistence": 0.25, "price_interaction": 0.20, "clustering_peak_bonus": 0.10, "source_metric_priority": 0.10},
+    "source_metric_priority_map": {"SGDHP": 1.0, "UGCH": 0.9, "A_MSPI": 0.8, "NVP": 0.7}
+  },
+  "signal_generator_v2_5_settings": {
+    "adaptive_directional_params": {"base_min_stars_for_signal": 2.5}
+  },
+  "adaptive_trade_idea_framework_settings": {
+    "min_overall_conviction_to_generate_idea": 999,
+    "intelligent_recommendation_management_rules": {"exit_mspi_flip_threshold": 0.7, "max_hold_time_config_minutes": {"minutes": 4320}}
+  },
+  "trade_parameter_optimizer_settings": {
+    "stop_loss_params": {"base_atr_multiplier": 1.5},
+    "profit_target_params": {"t1_base_atr_multiplier_no_sr": 1.5}
+  },
+  "visualization_settings": {
+    "dashboard": {
+      "title": "EOTS v2.5 Apex Predator Dashboard (ID-Sync v1.0)",
+      "defaults": {"symbol": "SPY", "dte": "0", "range_pct": 1.0, "refresh_interval_ms": 0},
+      "refresh_options": [{"label": "Manual", "value": 0}, {"label": "1 Sec", "value": 1000}, {"label": "5 Sec", "value": 5000}, {"label": "10 Sec", "value": 10000}, {"label": "30 Sec", "value": 30000}, {"label": "1 Min", "value": 60000}, {"label": "2 Min", "value": 120000}, {"label": "5 Min", "value": 300000}],
+      "range_slider_marks": {"1": "1%", "2.5": "2.5%", "5": "5%", "7.5": "7.5%", "10": "10%", "15": "15%", "20": "20%"},
+      "footer_text": "© 2025 EOTS - ID Synchronized. For Research & Educational Purposes Only.",
+      "default_graph_height": 600
+    },
+    "mspi_visualizer": {
+      "log_level": "DEBUG",
+      "output_dir": "eots_data_v2_5/charts_output_idsync",
+      "column_names": {
+        "mspi": "mspi",
+        "strike": "strike_price",
+        "option_kind": "opt_kind",
+        "expiration_date": "expiration_date",
+        "net_volume_pressure": "net_volume_pressure",
+        "net_value_pressure": "net_value_pressure",
+        "heuristic_net_delta_pressure": "heuristic_net_delta_pressure",
+        "net_gamma_flow_at_strike": "net_gamma_flow",
+        "net_vega_flow_at_strike": "net_vega_flow",
+        "net_theta_exposure_at_strike": "net_theta_exposure",
+        "dag_custom_norm": "dag_custom_norm",
+        "tdpi_norm": "tdpi_norm",
+        "vri_norm": "vri_norm",
+        "sdag_multiplicative_norm": "sdag_multiplicative_norm",
+        "sdag_directional_norm": "sdag_directional_norm",
+        "sdag_weighted_norm": "sdag_weighted_norm",
+        "sdag_volatility_focused_norm": "sdag_volatility_focused_norm",
+        "a_dag_norm": "a_dag_norm",
+        "d_tdpi_norm": "d_tdpi_norm",
+        "vri_2_0_norm": "vri_2_0_norm",
+        "e_sdag_composite_norm": "e_sdag_composite_norm"
+      },
+      "greek_flow_heatmap_options": [
+        {"label": "MSPI", "value": "mspi", "cs_key": "mspi_heatmap", "cb_title": "MSPI Score"},
+        {"label": "Net Gamma Flow", "value": "net_gamma_flow", "cs_key": "gamma_colorscale", "cb_title": "Net Gamma Flow"},
+        {"label": "Net Vega Flow", "value": "net_vega_flow", "cs_key": "vanna_colorscale", "cb_title": "Net Vega Flow"},
+        {"label": "Net Theta Exposure", "value": "net_theta_exposure", "cs_key": "net_theta_exposure_heatmap", "cb_title": "Net Theta Exp."}
+      ],
+      "greek_flow_heatmap_default_metric": "mspi",
+      "rolling_flow_chart_options": [
+        {"label": "Raw Vol/Val BS", "value": "raw_volval_bs", "bar_metric_prefix": "volmbs", "area_metric_prefix": "valuebs"}
+      ],
+      "rolling_flow_chart_default_option": "raw_volval_bs",
+      "charts_needing_figure_state_in_callbacks": ["mspi_components_chart", "combined_rolling_flow_chart"],
+      "min_normalization_denominator": 1e-9,
+      "default_chart_height": 700,
+      "plotly_template": "plotly_dark",
+      "rolling_intervals": ["5m", "15m", "30m", "60m"],
+      "colorscales": {
+        "mspi_heatmap": [[0.0, "rgb(139,0,0)"], [0.5, "rgb(240,240,240)"], [1.0, "rgb(0,0,139)"]],
+        "net_value_heatmap": [[0.0, "rgb(160,0,0)"], [0.5, "rgb(240,240,240)"], [1.0, "rgb(0,160,0)"]],
+        "net_volume_pressure_heatmap": [[0.0, "rgb(214,47,39)"], [0.5, "rgb(245,245,245)"], [1.0, "rgb(69,117,180)"]],
+        "net_theta_exposure_heatmap": [[0.0,"rgb(255,0,0)"],[0.5,"rgb(240,240,240)"],[1.0,"rgb(0,200,0)"]],
+        "gamma_colorscale": "Viridis", "vanna_colorscale": "Cividis"
+      },
+      "hover_settings": {
+        "show_overview_metrics_default": true, "show_oi_structure_default": true, "show_details_section_default": true,
+        "overview_metrics_config": [
+          {"key": "mspi", "label": "MSPI", "precision": 3, "is_currency": false},
+          {"key": "sai", "label": "SAI", "precision": 3, "is_currency": false},
+          {"key": "ssi", "label": "SSI", "precision": 3, "is_currency": false},
+          {"key": "arfi", "label": "ARFI", "precision": 3, "is_currency": false},
+          {"key": "dag_custom_norm", "label": "DAG(C)", "precision": 3, "is_currency": false},
+          {"key": "tdpi_norm", "label": "TDPI", "precision": 3, "is_currency": false},
+          {"key": "vri_norm", "label": "VRI", "precision": 3, "is_currency": false},
+          {"key": "sdag_multiplicative_norm", "label": "SDAG(M)", "precision":3, "is_currency": false},
+          {"key": "net_volume_pressure", "label": "Net Vol P", "precision": 0, "is_currency": false },
+          {"key": "net_value_pressure", "label": "Net Val P", "precision": 0, "is_currency": true },
+          {"key": "heuristic_net_delta_pressure", "label": "Net Delta P (H)", "precision": 0, "is_currency": false },
+          {"key": "net_gamma_flow", "label": "Net Γ Flow", "precision": 0, "is_currency": false },
+          {"key": "net_vega_flow", "label": "Net ν Flow", "precision": 0, "is_currency": false },
+          {"key": "net_theta_exposure", "label": "Net θ Exp", "precision": 0, "is_currency": false }
+        ],
+        "oi_structure_metrics_config": [{"base_key": "dxoi", "label": "DxOI"}, {"base_key": "gxoi", "label": "GxOI"}],
+        "details_section_keys": ["level_category", "conviction", "strategy", "rationale", "type", "agree_count", "exit_reason", "status_update"],
+        "chart_specific_hover": {"default": {"sections": ["base_info", "overview_metrics"]}}
+      },
+      "chart_specific_params": {
+        "raw_greek_charts_price_range_pct": 7.5, "combined_flow_chart_price_range_pct": 12.0,
+        "mspi_components_bar_colors": {
+          "mspi": {"pos": "darkblue", "neg": "darkred"},
+          "dag_custom_norm": {"pos": "rgb(255,215,0)", "neg": "rgb(128,0,128)"},
+          "tdpi_norm": {"pos": "green", "neg": "red"}, "vri_norm": {"pos": "cyan", "neg": "magenta"},
+          "sdag_multiplicative_norm": {"pos": "#FFA07A", "neg": "#6A5ACD"}
+        },
+        "show_net_sdag_trace": true, "net_sdag_trace_default_visibility": "legendonly",
+        "net_sdag_marker_style": {"symbol": "diamond", "color": "rgba(255, 255, 255, 0.7)", "size": 8, "line": {"color": "white", "width": 1}},
+        "component_comparison_height": 700, "volval_comparison_height": 600, "key_levels_height": 600,
+        "trading_signals_height": 600, "recommendations_table_height": 650, "combined_flow_chart_height": 700,
+        "recommendations_table_column_display_map": {
+          "id": "ID", "Category": "Category", "direction_label": "Bias/Type", "strike": "strike_price",
+          "strategy": "Strategy / Note", "conviction_stars": "Conv★", "status": "Status",
+          "raw_conviction_score_final_adj": "Score", "entry_ideal": "Entry", "target_1": "T1",
+          "target_2": "T2", "stop_loss": "SL", "rationale": "Rationale", "target_rationale": "Tgt. Logic",
+          "mspi_at_signal": "MSPI Signal", "timestamp": "Issued", "last_updated_ts": "Adjusted",
+          "exit_reason": "Exit Info", "type": "Signal Src", "status_update": "Last Update"
+        },
+        "combined_rolling_flow_chart_barmode": "overlay",
+        "rolling_flow_customization": {
+          "5m": {"volume_positive_color": "#2ca02c", "volume_negative_color": "#d62728", "volume_opacity": 0.8, "value_positive_fill_color": "rgba(44,160,44,0.15)", "value_negative_fill_color": "rgba(214,39,40,0.15)", "value_positive_line_color": "rgba(44,160,44,0.6)", "value_negative_line_color": "rgba(214,39,40,0.6)"},
+          "15m": {"volume_positive_color": "#98df8a", "volume_negative_color": "#ff9896", "volume_opacity": 0.75, "value_positive_fill_color": "rgba(152,223,138,0.15)", "value_negative_fill_color": "rgba(255,152,150,0.15)", "value_positive_line_color": "rgba(152,223,138,0.55)", "value_negative_line_color": "rgba(255,152,150,0.55)"},
+          "defaults": {"volume_positive_color": "#cccccc", "volume_negative_color": "#777777", "volume_opacity": 0.7, "value_positive_fill_color": "rgba(204,204,204,0.1)", "value_negative_fill_color": "rgba(119,119,119,0.1)", "value_positive_line_color": "rgba(204,204,204,0.5)", "value_negative_line_color": "rgba(119,119,119,0.5)"}
+        }
+      },
+      "legend_settings": {"orientation": "h", "yanchor": "bottom", "y_pos": 1.02, "xanchor": "right", "x_pos": 1, "trace_order": "normal"}
+    }
+  },
+  "validation": {
+    "required_top_level_sections": [
+      "system_settings", "api_credentials", "data_fetcher_settings",
+      "initial_processor_v2_5_settings", "metrics_calculator_v2_5_settings",
+      "ticker_context_analyzer_settings", "market_regime_engine_settings",
+      "key_level_identifier_settings", "signal_generator_v2_5_settings",
+      "adaptive_trade_idea_framework_settings", "trade_parameter_optimizer_settings",
+      "visualization_settings"
+    ],
+    "weights_sum_tolerance_mspi": 0.05
+  },
+  "symbol_specific_overrides": {
+    "SPY": {
+      "metrics_calculator_v2_5_settings": {"hp_eod_params": {"reference_price_field_in_und_data": "day_open_price_und"}},
+      "ticker_context_analyzer_settings": {"is_primary_index_target": true, "expiration_params": {"recognize_mwf": true, "recognize_eom": true, "recognize_quad": true}},
+      "market_regime_engine_settings": {"default_regime": "REGIME_SPY_NEUTRAL_OBSERVE_BASIC", "regime_evaluation_order": ["REGIME_EOD_HEDGING_PRESSURE_STRONG_BUY", "REGIME_EOD_HEDGING_PRESSURE_STRONG_SELL", "...SPY_specific_basic_order..."], "regime_rules": {"REGIME_SPX_0DTE_FRIDAY_PM_EXTREME_PIN_RISK_VCI_CONFIRMED": {"_all_of": [{"ticker_context.is_0DTE_SPX_Friday_PM_eq": true}]}}, "dynamic_threshold_definitions": {"gib_extreme_neg_thresh_spy": {"type": "relative_percentile", "metric_source_col": "gib_oi_based_und_eod", "percentile": 5, "lookback_days": 90, "fallback_value": -250000000000.0}}},
+      "adaptive_trade_idea_framework_settings": {"min_overall_conviction_to_generate_idea": 999},
+      "trade_parameter_optimizer_settings": {"stop_loss_params": {"base_atr_multiplier": 1.2}}
+    },
+    "DEFAULT": {
+      "metrics_calculator_v2_5_settings": {"hp_eod_params": {"reference_price_field_in_und_data": "day_open_price_und"}},
+      "ticker_context_analyzer_settings": {"is_primary_index_target": false},
+      "market_regime_engine_settings": {"default_regime": "REGIME_DEFAULT_NEUTRAL_OBSERVE_BASIC"}
+    }
+  },
+  "_config_file_path_cached_at": "C:\\Users\\dangt\\OneDrive\\Desktop\\elite_options_system_package\\config_v2.json"
+}
