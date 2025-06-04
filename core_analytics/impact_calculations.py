@@ -31,6 +31,7 @@ except AttributeError as ae:
 # Adjust import path if necessary based on your project structure.
 try:
     from utils import ids # Centralized IDs
+    from .system_utilities import ensure_columns
     print(f"DEBUG_IMPACT_CALC: Successfully imported 'ids' from 'utils'. Module path: {ids.__file__}") # Print path
     if hasattr(ids, 'IMPACT_VEGA_RAW'):
         print(f"DEBUG_IMPACT_CALC: ids.IMPACT_VEGA_RAW exists! Value: '{getattr(ids, 'IMPACT_VEGA_RAW')}'")

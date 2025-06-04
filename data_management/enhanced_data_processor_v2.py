@@ -324,7 +324,7 @@ class ITSIntegrator_EDP:
         self.logger.info("Attempting to load and instantiate IntegratedTradingSystem.")
         if not CORE_ANALYTICS_MODULES_AVAILABLE_EDP:
             self.logger.critical("ITSIntegrator: Core analytics modules (integrated_strategies_v2) failed to import. Using Dummy ITS.")
-            self.its_instance = DummyIntegratedTradingSystem_EDP(config_path=self.config_manager.provided_config_path, edp_logger=self.logger)
+            self.its_instance = DummyIntegratedTradingSystem_EDP(config_path=self.config_manager.provided_config_path, edp_logger=self.logger, ids_imported_successfully=IDS_IMPORTED_SUCCESSFULLY_EDP)
             return
 
         try:
@@ -333,7 +333,7 @@ class ITSIntegrator_EDP:
                  config_path_for_its = DEFAULT_CONFIG_FILE_PATH_EDP
                  self.logger.warning(f"No explicit config path for ITS, defaulting to EDP's default: {config_path_for_its}")
 
-            self.its_instance = integrated_strategies_v2.IntegratedTradingSystem(config_path=config_path_for_its)
+            self.its_instance = integrated_strategies_v2.IntegratedTradingSystem(config_path=config_path_for_its, ids_imported_successfully=IDS_IMPORTED_SUCCESSFULLY_EDP)
             self.logger.info(f"Successfully instantiated 'IntegratedTradingSystem' using config: '{config_path_for_its}'.")
         except Exception as e_its_load:
             self.logger.critical(f"Failed to instantiate real 'IntegratedTradingSystem': {e_its_load}. Using Dummy ITS.", exc_info=True)

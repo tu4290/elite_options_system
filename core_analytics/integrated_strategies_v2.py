@@ -7,6 +7,7 @@ robust calculation of the core MSPI suite and v2.3-level signals/levels,
 fully integrated with ids.py and enhanced_data_processor_v2.py.
 Enhanced logging and strict ids.py adherence applied.
 """
+IDS_IMPORTED_SUCCESSFULLY_EDP = True # Define the flag directly in this module
 
 # --- Standard & Third-Party Imports ---
 import logging
@@ -29,7 +30,7 @@ import time # For timing measurements
 # further set by the main application importing this module.
 logger_its_module = logging.getLogger(__name__) # Use __name__ for module-level logger
 if not logger_its_module.hasHandlers() and not logging.getLogger().hasHandlers(): # Basic setup if not configured by main app
-    logging.basicConfig(level=logging.INFO, 
+    logging.basicConfig(level=logging.INFO,
                         format="[%(levelname)s] (%(name)s:%(funcName)s:%(lineno)d) %(asctime)s - %(message)s",
                         handlers=[logging.StreamHandler(sys.stdout)])
 logger_its_module.info(f"core_analytics.integrated_strategies_v2.py (Version: EOTS_ITS_v2.3.1_Canon_IDS_Sync_Logging): Logger initialized.")
@@ -43,13 +44,13 @@ try:
     from .system_utilities import (
         normalize_series, ensure_columns, map_score_to_stars, get_atr,
         calculate_proximity_factor, calculate_dynamic_threshold_wrapper,
-        aggregate_for_levels, get_performance_metrics_stub 
+        aggregate_for_levels, get_performance_metrics_stub
     )
     # Import all v2.3 relevant metric calculation modules
-    from . import mspi_orchestration_module 
+    from . import mspi_orchestration_module
     from . import level_identification_module
-    from . import signal_generation_module 
-    from . import fallback_recommendation_module 
+    from . import signal_generation_module
+    from . import fallback_recommendation_module
     from . import recommendation_state_manager
     # These are more v2.5, but their stubs/basic versions might be called if config allows.
     # Importing them allows type hinting and checking hasattr for specific functions.
@@ -99,9 +100,9 @@ except ImportError as e_rel_import_its_v231:
                 if name == "generate_adaptive_trade_ideas_main" or name == "get_strategy_recommendations_fallback": return [], 0 # (recs, next_id)
                 if name == "is_immediate_exit_warranted": return None # Exit reason or None
                 if name == "adjust_active_recommendation_parameters": return None # Modifies in-place
-                if name == "update_symbol_adaptive_historical_context": 
+                if name == "update_symbol_adaptive_historical_context":
                     # Try to return the context dict if passed, else empty
-                    return next((arg for arg in args if isinstance(arg, dict) and "past_flow_delta" in arg), {}) 
+                    return next((arg for arg in args if isinstance(arg, dict) and "past_flow_delta" in arg), {})
                 return {"error": log_msg, "dummy_fallback_its_internal_v231": True} # Generic fallback
             return dummy_func_its
 
@@ -135,12 +136,12 @@ except ImportError as e_rel_import_its_v231:
         IDS_IMPORTED_SUCCESSFULLY_EDP = False # Ensure this flag is set if ids itself fails
 
     if 'core_analytics.config_utils' not in sys.modules:
-        DEFAULT_ITS_CONFIG_V231: Dict[str, Any] = {} 
-        def load_and_validate_config_its(config_path: Optional[str]=None, default_config_data: Optional[Dict[str,Any]]=None, log_instance: Optional[logging.Logger]=None) -> Dict[str,Any]: 
+        DEFAULT_ITS_CONFIG_V231: Dict[str, Any] = {}
+        def load_and_validate_config_its(config_path: Optional[str]=None, default_config_data: Optional[Dict[str,Any]]=None, log_instance: Optional[logging.Logger]=None) -> Dict[str,Any]:
             if log_instance: log_instance.error(f"Using DUMMY load_and_validate_config_its (failed module: {_FAILED_MODULE_NAME_ITS_V231}).")
             return default_config_data or {}
         logger_its_module.critical("ITS CRITICAL (v2.3.1): 'core_analytics.config_utils' FAILED to import. Using DUMMY config loader.")
-    
+
     # Assign dummy modules if their real counterparts (or dependencies) failed
     module_map_its = {
         "mspi_orchestration_module": mspi_orchestration_module, "level_identification_module": level_identification_module,
@@ -155,14 +156,14 @@ except ImportError as e_rel_import_its_v231:
             logger_its_module.warning(f"ITS (v2.3.1): Using DummyModule_ITS for '{mod_name_str_its}' due to earlier import failures.")
 
     if 'core_analytics.system_utilities' not in sys.modules:
-        def normalize_series(*args: Any, **kwargs: Any) -> pd.Series: logger_its_module.error("Using DUMMY normalize_series."); return pd.Series(dtype=float) 
-        def ensure_columns(*args: Any, **kwargs: Any) -> Tuple[pd.DataFrame, bool]: logger_its_module.error("Using DUMMY ensure_columns."); return (pd.DataFrame(), False) 
-        def map_score_to_stars(*args: Any, **kwargs: Any) -> int: logger_its_module.error("Using DUMMY map_score_to_stars."); return 0 
-        def get_atr(*args: Any, **kwargs: Any) -> float: logger_its_module.error("Using DUMMY get_atr."); return 0.0 
-        def calculate_proximity_factor(*args: Any, **kwargs: Any) -> Union[float, pd.Series]: logger_its_module.error("Using DUMMY calculate_proximity_factor."); return 0.0 
-        def calculate_dynamic_threshold_wrapper(*args: Any, **kwargs: Any) -> Optional[Union[float, List[float]]]: logger_its_module.error("Using DUMMY calculate_dynamic_threshold_wrapper."); return None 
-        def aggregate_for_levels(*args: Any, **kwargs: Any) -> pd.DataFrame: logger_its_module.error("Using DUMMY aggregate_for_levels."); return pd.DataFrame() 
-        def get_performance_metrics_stub(*args: Any, **kwargs: Any) -> Dict[str, float]: logger_its_module.error("Using DUMMY get_performance_metrics_stub."); return {} 
+        def normalize_series(*args: Any, **kwargs: Any) -> pd.Series: logger_its_module.error("Using DUMMY normalize_series."); return pd.Series(dtype=float)
+        def ensure_columns(*args: Any, **kwargs: Any) -> Tuple[pd.DataFrame, bool]: logger_its_module.error("Using DUMMY ensure_columns."); return (pd.DataFrame(), False)
+        def map_score_to_stars(*args: Any, **kwargs: Any) -> int: logger_its_module.error("Using DUMMY map_score_to_stars."); return 0
+        def get_atr(*args: Any, **kwargs: Any) -> float: logger_its_module.error("Using DUMMY get_atr."); return 0.0
+        def calculate_proximity_factor(*args: Any, **kwargs: Any) -> Union[float, pd.Series]: logger_its_module.error("Using DUMMY calculate_proximity_factor."); return 0.0
+        def calculate_dynamic_threshold_wrapper(*args: Any, **kwargs: Any) -> Optional[Union[float, List[float]]]: logger_its_module.error("Using DUMMY calculate_dynamic_threshold_wrapper."); return None
+        def aggregate_for_levels(*args: Any, **kwargs: Any) -> pd.DataFrame: logger_its_module.error("Using DUMMY aggregate_for_levels."); return pd.DataFrame()
+        def get_performance_metrics_stub(*args: Any, **kwargs: Any) -> Dict[str, float]: logger_its_module.error("Using DUMMY get_performance_metrics_stub."); return {}
         logger_its_module.critical("ITS CRITICAL (v2.3.1): 'core_analytics.system_utilities' FAILED to import. Using DUMMY system utilities.")
 
 
@@ -182,7 +183,7 @@ class IntegratedTradingSystem:
 
         effective_config_path_for_load: str
         default_cfg_filename_its = "config_v2.json" # Standard config filename
-        
+
         if config_path and os.path.isabs(config_path) and os.path.exists(config_path):
             effective_config_path_for_load = config_path
             self.instance_logger.debug(f"Using provided absolute config_path: '{effective_config_path_for_load}'")
@@ -192,7 +193,7 @@ class IntegratedTradingSystem:
                 effective_config_path_for_load = os.path.abspath(path_from_cwd_its)
                 self.instance_logger.debug(f"Using provided config_path, resolved relative to CWD: '{effective_config_path_for_load}'")
             else: # Try relative to this script's project structure
-                try: 
+                try:
                     script_dir_its = os.path.dirname(os.path.abspath(__file__))
                     project_root_its = os.path.dirname(script_dir_its) # Assumes ITS is in core_analytics, one level down
                     path_from_project_root_its = os.path.join(project_root_its, config_path) # Try provided name relative to project root
@@ -207,7 +208,7 @@ class IntegratedTradingSystem:
                     effective_config_path_for_load = os.path.join(project_root_its, default_cfg_filename_its)
                     self.instance_logger.warning(f"__file__ not defined. Trying default '{default_cfg_filename_its}' in CWD: '{effective_config_path_for_load}'")
         else: # No config_path provided, use default logic
-            try: 
+            try:
                 script_dir_its = os.path.dirname(os.path.abspath(__file__))
                 project_root_its = os.path.dirname(script_dir_its)
             except NameError: project_root_its = os.getcwd()
@@ -221,7 +222,7 @@ class IntegratedTradingSystem:
                 default_config_data=DEFAULT_ITS_CONFIG_V231, # From config_utils (or its fallback)
                 log_instance=self.instance_logger.getChild("ConfigLoader_ITS_v231")
             )
-            self.instance_logger.info(f"ITS Configuration loaded. Source: '{self.config.get(ids.CFG_CONFIG_FILE_PATH_CACHED_AT if IDS_IMPORTED_SUCCESSFULLY_EDP else '_config_file_path_cached_at', 'ITS Defaults/Retriever/Not Found')}'")
+            self.instance_logger.info(f"ITS Configuration loaded. Source: '{self.config.get(ids.CFG_CONFIG_FILE_PATH_CACHED_AT, 'ITS Defaults/Retriever/Not Found')}'")
         except Exception as e_cfg_load_its:
             self.instance_logger.critical(f"CRITICAL ERROR loading/validating ITS config from '{effective_config_path_for_load}': {e_cfg_load_its}", exc_info=True)
             self.config = copy.deepcopy(DEFAULT_ITS_CONFIG_V231) # Use a copy of the default
@@ -231,12 +232,12 @@ class IntegratedTradingSystem:
         final_log_level_str = log_level # Prioritize direct param
         if final_log_level_str is None: # If not passed directly, get from config
             final_log_level_str = str(self._get_config_value(ids.CFG_SYSTEM_LOG_LEVEL, "INFO"))
-        
-        try: 
+
+        try:
             self.instance_logger.setLevel(getattr(logging, final_log_level_str.upper()))
             # Propagate level to child loggers if this logger's level is being set more restrictively than root
             # This is complex; usually main app sets root level. For ITS, just set its own.
-        except (AttributeError, ValueError): 
+        except (AttributeError, ValueError):
             self.instance_logger.setLevel(logging.INFO)
             self.instance_logger.warning(f"Invalid log level '{final_log_level_str}' specified for ITS. Defaulting to INFO.")
         self.instance_logger.info(f"ITS Instance logger level set to: {logging.getLevelName(self.instance_logger.getEffectiveLevel())}.")
@@ -244,11 +245,11 @@ class IntegratedTradingSystem:
         self._load_core_attributes_from_config() # Load attributes using ids.py constants
 
         # Max length for historical DataFrame deques, using ids.py for config path
-        df_hist_maxlen_cfg_val = self._get_config_value(ids.CFG_SYSTEM_DF_HISTORY_MAXLEN_ITS, 10) 
-        try: 
+        df_hist_maxlen_cfg_val = self._get_config_value(ids.CFG_SYSTEM_DF_HISTORY_MAXLEN_ITS, 10)
+        try:
             self.df_history_maxlen = int(df_hist_maxlen_cfg_val)
             if self.df_history_maxlen <= 0: self.df_history_maxlen = 1 # Ensure at least 1
-        except (ValueError, TypeError): 
+        except (ValueError, TypeError):
             self.df_history_maxlen = 10 # Fallback
             self.instance_logger.warning(f"Invalid config value for df_history_maxlen_its ('{df_hist_maxlen_cfg_val}'). Defaulting to {self.df_history_maxlen}.")
         self.instance_logger.debug(f"DataFrame history maxlen set to: {self.df_history_maxlen}")
@@ -263,7 +264,7 @@ class IntegratedTradingSystem:
         self.mspi_orchestration_module = mspi_orchestration_module
         self.level_identification_module = level_identification_module
         self.signal_generator_module = signal_generation_module
-        self.fallback_recs_module = fallback_recommendation_module 
+        self.fallback_recs_module = fallback_recommendation_module
         self.rec_state_manager_module = recommendation_state_manager
         self.system_utils_module = sys.modules.get('core_analytics.system_utilities', DummyModule_ITS("system_utilities_fallback_its")) # type: ignore
 
@@ -293,22 +294,22 @@ class IntegratedTradingSystem:
         load_attr_logger = self.instance_logger.getChild("LoadCoreAttributes_ITS_v231")
         load_attr_logger.info("Loading ITS core attributes and column names from configuration...")
 
-        if not IDS_IMPORTED_SUCCESSFULLY_EDP: # Check if ids.py itself loaded
-            load_attr_logger.critical("CRITICAL: 'utils.ids' module was not imported successfully. Cannot load attributes based on ids.py constants. ITS will likely fail or use incorrect hardcoded fallbacks.")
-            # Set critical attributes to hardcoded fallbacks if ids.py is missing
-            self.col_strike = "strike_price"
-            self.col_opt_kind = "opt_kind"
-            self.col_underlying_symbol = "underlying_symbol" # Fallback
-            self.col_expiration_date = "expiration_date"
-            self.col_delta_greek = "delta"
-            self.mspi_col_name = "mspi"
-            # ... set other critical fallbacks ...
-            return # Exit early if ids.py is not available
+        # if not IDS_IMPORTED_SUCCESSFULLY_EDP: # Check if ids.py itself loaded
+        #     load_attr_logger.critical("CRITICAL: 'utils.ids' module was not imported successfully. Cannot load attributes based on ids.py constants. ITS will likely fail or use incorrect hardcoded fallbacks.")
+        #     # Set critical attributes to hardcoded fallbacks if ids.py is missing
+        #     self.col_strike = "strike_price"
+        #     self.col_opt_kind = "opt_kind"
+        #     self.col_underlying_symbol = "underlying_symbol" # Fallback
+        #     self.col_expiration_date = "expiration_date"
+        #     self.col_delta_greek = "delta"
+        #     self.mspi_col_name = "mspi"
+        #     # ... set other critical fallbacks ...
+        #     return # Exit early if ids.py is not available
 
         # --- Column Names for ITS Internal Use and Module Calls ---
         self.col_strike = str(self._get_config_value(ids.CFG_METRICS_CALC_STRIKE_COL_INTERNAL, ids.COL_STRIKE))
         self.col_opt_kind = str(self._get_config_value(ids.CFG_VIZ_COL_OPT_KIND, ids.COL_OPT_KIND))
-        
+
         # Corrected logic for underlying_symbol based on previous fix
         _underlying_symbol_config_key_list = ids.CFG_VIZ_COL_NAMES + ["underlying_symbol"] # Path to "underlying_symbol" in viz config e.g. ['visualization_settings', ..., 'underlying_symbol']
         _default_underlying_symbol_col = ids.COL_UNDERLYING_SYMBOL_CHAIN # Default to the chain-specific column from ids.py
@@ -324,7 +325,7 @@ class IntegratedTradingSystem:
 
         # Source columns for metrics_calculator (passed to mspi_orchestration_module)
         metrics_calc_cfg_base = self._get_config_value(ids.CFG_METRICS_CALC, {}) # Get the whole metrics_calculator_v2_5_settings block
-        
+
         self.gamma_exposure_col_its = str(metrics_calc_cfg_base.get(ids.CFG_METRICS_CALC_GAMMA_COL_KEY[-1], ids.COL_GXOI_CONTRACT)) # Use last part of path as key
         self.delta_exposure_col_its = str(metrics_calc_cfg_base.get(ids.CFG_METRICS_CALC_DELTA_COL_KEY[-1], ids.COL_DXOI_CONTRACT))
         self.option_iv_col_its = str(metrics_calc_cfg_base.get(ids.CFG_METRICS_CALC_OPT_IV_COL_KEY[-1], ids.COL_VOLATILITY_OPTION_CONTRACT))
@@ -365,7 +366,7 @@ class IntegratedTradingSystem:
         self.d_tdpi_enabled_its_attr = self.enhanced_metrics_master_enabled and bool(self._get_config_value(ids.CFG_ENHANCED_METRICS + ["d_tdpi", "enabled"], False))
         self.vri_2_0_enabled_its_attr = self.enhanced_metrics_master_enabled and bool(self._get_config_value(ids.CFG_ENHANCED_METRICS + ["vri_2_0", "enabled"], False))
         self.e_sdag_enabled_its_attr = self.enhanced_metrics_master_enabled and bool(self._get_config_value(ids.CFG_ENHANCED_METRICS + ["e_sdag", "enabled"], False))
-        
+
         self.a_dag_output_col_its_attr = str(self._get_config_value(ids.CFG_ENHANCED_METRICS + ["a_dag", "output_column_name"], ids.COL_A_DAG_OUTPUT))
         self.a_dag_norm_col_its_attr = str(self._get_config_value(ids.CFG_ENHANCED_METRICS + ["a_dag", "norm_column_name"], ids.COL_A_DAG_NORM))
         self.d_tdpi_output_col_its_attr = str(self._get_config_value(ids.CFG_ENHANCED_METRICS + ["d_tdpi", "output_column_name"], ids.COL_D_TDPI_OUTPUT))
@@ -374,7 +375,7 @@ class IntegratedTradingSystem:
         self.vri_2_0_norm_col_its_attr = str(self._get_config_value(ids.CFG_ENHANCED_METRICS + ["vri_2_0", "norm_column_name"], ids.COL_VRI_2_0_NORM))
         self.e_sdag_composite_output_col_its_attr = str(self._get_config_value(ids.CFG_ENHANCED_METRICS + ["e_sdag", "composite_output_column_name"], ids.COL_E_SDAG_COMPOSITE_OUTPUT))
         self.e_sdag_composite_norm_col_its_attr = str(self._get_config_value(ids.CFG_ENHANCED_METRICS + ["e_sdag", "composite_norm_column_name"], ids.COL_E_SDAG_COMPOSITE_NORM))
-        
+
         # E-SDAG specific sub-configurations
         metrics_calc_e_sdag_sub_cfgs_its = self._get_config_value(ids.CFG_METRICS_CALC_ADAPTIVE_ESDAG_SETTINGS, {}) # Path from ids.py
         self.e_sdag_use_enhanced_skew_cfg_its_attr = self.e_sdag_enabled_its_attr and bool(metrics_calc_e_sdag_sub_cfgs_its.get("use_enhanced_skew_calculation_for_sgexoi", False))
@@ -385,7 +386,7 @@ class IntegratedTradingSystem:
 
     def _orchestrate_full_analysis(
         self,
-        options_df_input: pd.DataFrame, 
+        options_df_input: pd.DataFrame,
         underlying_data: Dict[str, Any], # Raw underlying bundle from CV
         underlying_price_ctx: Optional[float], # Scalar current price
         current_time_ctx: Optional[dt_time], # Current time object
@@ -397,8 +398,8 @@ class IntegratedTradingSystem:
         historical_atr_normalized_vs_avg_ctx: Optional[float], # For v2.5 adaptive modules
         current_symbol_ctx: str,
         expiration_calendar_data_ctx: Optional[List[date]],
-        current_market_regime_ctx: Optional[str] = None, 
-        ticker_context_flags_ctx: Optional[Dict[str, Any]] = None 
+        current_market_regime_ctx: Optional[str] = None,
+        ticker_context_flags_ctx: Optional[Dict[str, Any]] = None
     ) -> Tuple[pd.DataFrame, Dict[str, Any], Dict[str, Any], Optional[str]]: # Returns (metrics_df, key_levels_bundle, signals_bundle, error_string)
         orch_logger = self.instance_logger.getChild(f"OrchestrateFullAnalysis.{current_symbol_ctx}.ITS_v231")
         price_display_orch = f"{underlying_price_ctx:.2f}" if underlying_price_ctx is not None else "N/A"
@@ -414,7 +415,7 @@ class IntegratedTradingSystem:
         # The mspi_orchestration_module calculates base v2.3 metrics (MSPI, original SDAGs, base TDPI/VRI/DAG).
         # It's crucial that column names passed here match what mspi_orchestration_module expects.
         # These are derived from self attributes set in _load_core_attributes_from_config, which use ids.py
-        
+
         orch_logger.debug(f"Calling mspi_orchestration_module.calculate_mspi_main for '{current_symbol_ctx}'...")
         df_metrics_calculated = self.mspi_orchestration_module.calculate_mspi_main( # type: ignore # Handled by dummy if import failed
             options_df=options_df_input.copy(), # Pass the df that already has raw impacts from EDP
@@ -436,18 +437,18 @@ class IntegratedTradingSystem:
             proxy_vega_flow_col_mspi=self.proxy_vega_flow_col_its, proxy_vanna_flow_col_mspi=self.proxy_vanna_flow_col_its,
             proxy_vomma_flow_col_mspi=self.proxy_vomma_flow_col_its,
             # Greek OI columns
-            charmxoi_col_mspi=self.charmxoi_col_its, txoi_col_mspi=self.txoi_col_its, 
-            vannaxoi_col_mspi=self.vannaxoi_col_its, vxoi_col_mspi=self.vxoi_col_its, 
+            charmxoi_col_mspi=self.charmxoi_col_its, txoi_col_mspi=self.txoi_col_its,
+            vannaxoi_col_mspi=self.vannaxoi_col_its, vxoi_col_mspi=self.vxoi_col_its,
             vommaxoi_col_mspi=self.vommaxoi_col_its,
             # Output column name for MSPI
-            mspi_output_col_name_cfg=self.mspi_col_name, 
+            mspi_output_col_name_cfg=self.mspi_col_name,
             # Original SDAG settings
             original_use_skew_adjusted_cfg=self.original_use_skew_adjusted_cfg_its,
             original_skew_adjusted_gamma_col_mspi=self.original_skew_adjusted_gamma_col_its,
             volm_col_for_weighting_mspi=self.volm_col_for_weighting_its,
             # --- Explicitly control v2.5 features for a v2.3 run ---
-            adaptive_system_enabled_its=False, 
-            enhanced_metrics_master_enabled_its=False, 
+            adaptive_system_enabled_its=False,
+            enhanced_metrics_master_enabled_its=False,
             a_dag_enabled_its=False, a_dag_output_col_its=self.a_dag_output_col_its_attr, a_dag_norm_col_its=self.a_dag_norm_col_its_attr,
             e_sdag_enabled_its=False, e_sdag_composite_output_col_its=self.e_sdag_composite_output_col_its_attr, e_sdag_composite_norm_col_its=self.e_sdag_composite_norm_col_its_attr,
             e_sdag_use_enhanced_skew_cfg_its=False, e_sdag_enhanced_gex_out_col_its=self.e_sdag_enhanced_gex_out_col_its_attr,
@@ -457,17 +458,17 @@ class IntegratedTradingSystem:
             current_time_mspi=current_time_ctx, current_iv_mspi=current_iv_ctx, avg_iv_5day_mspi=avg_iv_5day_ctx,
             iv_context_mspi=iv_context_dict_ctx, underlying_price_mspi=underlying_price_ctx,
             historical_ohlc_df_for_atr_mspi=historical_ohlc_df_ctx,
-            avg_iv_long_term_mspi=avg_iv_long_term_ctx, 
-            historical_atr_normalized_vs_avg_mspi=historical_atr_normalized_vs_avg_ctx, 
+            avg_iv_long_term_mspi=avg_iv_long_term_ctx,
+            historical_atr_normalized_vs_avg_mspi=historical_atr_normalized_vs_avg_ctx,
             current_symbol_mspi=current_symbol_ctx,
-            symbol_specific_historical_context_mspi=self.adaptive_historical_context.get(current_symbol_ctx, {}), 
+            symbol_specific_historical_context_mspi=self.adaptive_historical_context.get(current_symbol_ctx, {}),
             log_instance=orch_logger.getChild("MetricsCalculatorCall_ITS_v231")
         )
         orch_logger.info(f"MSPI Suite (v2.3 style) calculations complete for '{current_symbol_ctx}'. Output DF shape: {df_metrics_calculated.shape}")
         if self.mspi_col_name not in df_metrics_calculated.columns:
             orch_logger.error(f"MSPI output column '{self.mspi_col_name}' not found in DataFrame after mspi_orchestration_module. This is a critical issue.")
             # Add a dummy MSPI column to prevent downstream errors if it's missing
-            df_metrics_calculated[self.mspi_col_name] = 0.0 
+            df_metrics_calculated[self.mspi_col_name] = 0.0
 
         # --- Aggregation of strike-level metrics (v2.3 style) ---
         orch_logger.debug(f"Aggregating strike-level metrics for '{current_symbol_ctx}'...")
@@ -475,30 +476,30 @@ class IntegratedTradingSystem:
         # Get enabled SDAG methods from config using ids.py constant
         enabled_sdag_methods_for_agg = self._get_config_value(ids.CFG_DAG_METHODOLOGIES_ENABLED_ITS, [])
         aggregated_df = self.system_utils_module.aggregate_for_levels( # type: ignore # Handled by dummy
-            df_metrics_calculated.copy(), 
+            df_metrics_calculated.copy(),
             strike_col_name=self.col_strike, # Use the attribute set from config
-            enabled_sdag_methods_list=enabled_sdag_methods_for_agg, 
+            enabled_sdag_methods_list=enabled_sdag_methods_for_agg,
             log_instance=orch_logger.getChild("AggMetrics_ITS_v231")
         )
         orch_logger.info(f"Strike aggregation complete for '{current_symbol_ctx}'. Aggregated DF shape: {aggregated_df.shape}")
 
         # --- Key Levels Identification (v2.3 - simplified version or using EKL module if available) ---
         key_levels_bundle_out: Dict[str, Any] = {"error": "Key Levels (v2.3) not run or module unavailable.", "all_levels_sorted_by_strength": []}
-        if hasattr(self.level_identification_module, 'identify_enhanced_key_levels_main'): 
+        if hasattr(self.level_identification_module, 'identify_enhanced_key_levels_main'):
             orch_logger.debug(f"Calling level_identification_module.identify_enhanced_key_levels_main for '{current_symbol_ctx}'...")
             # Get config for EKL module
             key_level_main_cfg_its = self._get_config_value(ids.CFG_KEY_LEVEL_SETTINGS, {}) # Path from ids.py
             atr_fb_cfg_ekl_its = self._get_config_value(ids.CFG_METRICS_CALC_ATR_FALLBACK, {}) # Path from ids.py
-            
+
             key_levels_bundle_out = self.level_identification_module.identify_enhanced_key_levels_main( # type: ignore
-                current_aggregated_df=aggregated_df, 
+                current_aggregated_df=aggregated_df,
                 mspi_col_name_ekl=self.mspi_col_name, # Use ITS attribute for MSPI col name
                 strike_col_name_ekl=self.col_strike, # Use ITS attribute
                 # Pass other column names using ITS attributes (which are from config via ids.py)
-                underlying_symbol_col_ekl=self.col_underlying_symbol, 
+                underlying_symbol_col_ekl=self.col_underlying_symbol,
                 price_col_ekl=self.underlying_price_key_in_bundle, # Key for underlying price in underlying_data
-                opt_kind_col_ekl=self.col_opt_kind, 
-                delta_col_ekl=self.col_delta_greek, 
+                opt_kind_col_ekl=self.col_opt_kind,
+                delta_col_ekl=self.col_delta_greek,
                 volm_col_ekl=self.volm_col_for_weighting_its,
                 # Pass EKL specific configurations from the main config dict
                 ekl_mtf_dyn_mspi_base_cfg_ekl=float(key_level_main_cfg_its.get("dynamic_mspi_base_threshold_for_intraday", 0.3)),
@@ -537,11 +538,11 @@ class IntegratedTradingSystem:
             # Get v2.3 specific signal activation config
             signal_activation_v2_3_cfg_its = self._get_config_value(ids.CFG_SYSTEM_SIGNAL_ACTIVATION_V2_3, # Path from ids.py
                 default_return={"directional": True, "sdag_conviction": True, "volatility_expansion": False}) # Sensible v2.3 defaults
-            
+
             signals_bundle_out = self.signal_generator_module.generate_trading_signals( # type: ignore
                 current_aggregated_df=aggregated_df,
                 signal_activation_config=signal_activation_v2_3_cfg_its, # Pass the v2.3 specific config
-                config_value_getter=self._get_config_value, 
+                config_value_getter=self._get_config_value,
                 map_score_to_stars_func=map_score_to_stars, # type: ignore # Utility from system_utilities
                 enabled_sdag_methods=enabled_sdag_methods_for_agg, # Use the same list as for aggregation
                 min_sdag_agreement=int(self._get_config_value(_sdag_methodologies_base_path + ["min_agreement_for_conviction_signal"], 2)), # Use list addition for path
@@ -552,9 +553,9 @@ class IntegratedTradingSystem:
             orch_logger.info(f"Signal generation complete for '{current_symbol_ctx}'. Signals generated: {signals_bundle_out.get('signals_generated_count', 0)}. Result error: '{signals_bundle_out.get('error', 'None')}'")
         else:
             orch_logger.warning(f"Signal generation module or 'generate_trading_signals' function not available for '{current_symbol_ctx}'. Signals will be empty.")
-        
+
         # No internal pipeline error if we reached here, return the results
-        return df_metrics_calculated, key_levels_bundle_out, signals_bundle_out, None 
+        return df_metrics_calculated, key_levels_bundle_out, signals_bundle_out, None
 
     def process_market_data_and_generate_recommendations(
         self,
@@ -571,7 +572,7 @@ class IntegratedTradingSystem:
 
         overall_error_msg_its: Optional[str] = None
         full_traceback_str_its: Optional[str] = None
-        
+
         # Initialize return components with defaults
         final_metric_rich_df_its = raw_options_data.copy() if isinstance(raw_options_data, pd.DataFrame) else pd.DataFrame()
         key_levels_bundle_its: Dict[str, Any] = {"error": "ITS_EKL_NotRun_v231", "all_levels_sorted_by_strength": []}
@@ -602,13 +603,13 @@ class IntegratedTradingSystem:
             # IV Context
             mc_iv_quote_bundle_its = market_context.get("iv_and_quote_data", {})
             if not isinstance(mc_iv_quote_bundle_its, dict): mc_iv_quote_bundle_its = {} # Ensure it's a dict
-            
+
             # Use config keys (via attributes) for IV fields
             current_iv_key_its = self._get_config_value(ids.CFG_METRICS_CALC + ["current_iv_source_key_in_und_data"], ids.CV_UND_PARAM_VOLATILITY)
             mc_curr_iv_raw_its = market_context.get("current_iv", mc_iv_quote_bundle_its.get("current_iv", underlying_data.get(current_iv_key_its)))
             mc_curr_iv_val_its = float(pd.to_numeric(mc_curr_iv_raw_its, errors='coerce')) if pd.notna(mc_curr_iv_raw_its) else None
-            
-            avg_5d_iv_key_its = self._get_config_value(ids.CFG_METRICS_CALC + ["avg_5day_iv_source_key_in_und_data"], "avg_5day_iv_tradier_approx") 
+
+            avg_5d_iv_key_its = self._get_config_value(ids.CFG_METRICS_CALC + ["avg_5day_iv_source_key_in_und_data"], "avg_5day_iv_tradier_approx")
             mc_avg5d_iv_val_its = float(pd.to_numeric(mc_iv_quote_bundle_its.get(avg_5d_iv_key_its), errors='coerce')) if pd.notna(mc_iv_quote_bundle_its.get(avg_5d_iv_key_its)) else None
             process_logger_main.debug(f"IV Context for '{symbol}': Current IV: {mc_curr_iv_val_its}, Avg 5D IV: {mc_avg5d_iv_val_its}")
 
@@ -624,7 +625,7 @@ class IntegratedTradingSystem:
                     historical_atr_normalized_vs_avg_ctx=None, # Not used in v2.3.1 ITS
                     current_symbol_ctx=symbol, expiration_calendar_data_ctx=expiration_calendar
                 )
-            if orch_error_internal_its and not overall_error_msg_its: 
+            if orch_error_internal_its and not overall_error_msg_its:
                 overall_error_msg_its = orch_error_internal_its # Capture error from orchestration
             process_logger_main.info(f"Core analysis orchestration completed for '{symbol}'. DF shape: {final_metric_rich_df_its.shape}")
 
@@ -637,15 +638,15 @@ class IntegratedTradingSystem:
             active_recommendations_list_its, state_mgmt_err_its = self.update_active_recommendations_and_manage_state(
                 symbol=symbol, latest_processed_options_df=final_metric_rich_df_its,
                 current_key_levels_bundle=key_levels_bundle_its, current_signals_bundle=signals_bundle_its,
-                current_underlying_price=und_price_val_its, current_atr=current_atr_value_its, 
+                current_underlying_price=und_price_val_its, current_atr=current_atr_value_its,
                 current_time=mc_time_val_its,
                 iv_context_data=mc_iv_quote_bundle_its, expiration_calendar=expiration_calendar,
                 historical_ohlc_data_for_targets_param=historical_ohlc_data
             )
-            if state_mgmt_err_its and not overall_error_msg_its: 
+            if state_mgmt_err_its and not overall_error_msg_its:
                 overall_error_msg_its = state_mgmt_err_its
             process_logger_main.info(f"Recommendation state management complete for '{symbol}'. Active recommendations: {len(active_recommendations_list_its)}")
-            
+
             # Extract MSPI weights if available (set as df.attrs by mspi_orchestration_module)
             mspi_weights_applied_its = final_metric_rich_df_its.attrs.get('current_mspi_weights_applied_in_calc', {})
             if mspi_weights_applied_its:
@@ -657,9 +658,9 @@ class IntegratedTradingSystem:
                 overall_error_msg_its = f"CRITICAL Unhandled Exception in ITS main processing for '{symbol}': {type(e_main_its_processing).__name__} - {str(e_main_its_processing)}"
             full_traceback_str_its = traceback.format_exc() # Get the full traceback
             process_logger_main.critical(f"{overall_error_msg_its}\nAssociated Traceback:\n{full_traceback_str_its}")
-            
+
             # Ensure fallbacks for return bundle components
-            if not isinstance(final_metric_rich_df_its, pd.DataFrame): final_metric_rich_df_its = pd.DataFrame() 
+            if not isinstance(final_metric_rich_df_its, pd.DataFrame): final_metric_rich_df_its = pd.DataFrame()
             key_levels_bundle_its = {"error": overall_error_msg_its, "all_levels_sorted_by_strength": []}
             signals_bundle_its = {"error": overall_error_msg_its, "signals_generated_count": 0}
             if not isinstance(active_recommendations_list_its, list): active_recommendations_list_its = []
@@ -667,20 +668,20 @@ class IntegratedTradingSystem:
         # --- Construct Final Output Bundle ---
         # Ensure all components of the bundle are well-defined even if errors occurred
         final_bundle_to_return_its = {
-            "symbol": symbol, 
+            "symbol": symbol,
             "error": overall_error_msg_its, # This will contain the first critical error encountered
             "traceback": full_traceback_str_its, # Include traceback if a major exception occurred
             "processed_options_df": final_metric_rich_df_its.to_dict(orient='records') if isinstance(final_metric_rich_df_its, pd.DataFrame) and not final_metric_rich_df_its.empty else [],
             "aggregated_strike_data": [], # Placeholder for v2.3.1; proper aggregation can be added if needed
-            "key_levels": key_levels_bundle_its, 
-            "signals": signals_bundle_its, 
+            "key_levels": key_levels_bundle_its,
+            "signals": signals_bundle_its,
             "recommendations": active_recommendations_list_its,
             "current_mspi_weights_applied": mspi_weights_applied_its,
             "current_adaptive_historical_context_summary": self.adaptive_historical_context.get(symbol, {}).get("summary_for_bundle", {"status":"ITS_HistCtx_NotSummarized_v231"}),
             "atr_value_used_by_its": current_atr_value_its,
             "final_metric_rich_df_obj": final_metric_rich_df_its # The main DataFrame object
         }
-        
+
         # Perform aggregation for "aggregated_strike_data" if df is valid
         if isinstance(final_metric_rich_df_its, pd.DataFrame) and not final_metric_rich_df_its.empty:
             try:
@@ -718,8 +719,8 @@ class IntegratedTradingSystem:
                 self.active_recommendations.clear() # Clear recommendations from previous symbol
                 self.current_symbol_being_managed = symbol
                 # Initialize or retrieve recommendation ID counter for the new symbol
-                self.recommendation_id_counter = self.recommendation_id_counters_by_symbol.get(symbol, 0) 
-            
+                self.recommendation_id_counter = self.recommendation_id_counters_by_symbol.get(symbol, 0)
+
             # Ensure adaptive historical context exists for the symbol (even if simple for v2.3)
             if symbol not in self.adaptive_historical_context:
                 self.adaptive_historical_context[symbol] = {
@@ -739,23 +740,23 @@ class IntegratedTradingSystem:
                 rec_mgr_logger_its.debug(f"Calling recommendation_state_manager.manage_active_recommendations_v2_3 for '{symbol}'")
                 # Aggregate the latest_processed_options_df for MSPI flip checks etc.
                 aggregated_df_for_rec_mgmt = aggregate_for_levels(latest_processed_options_df.copy(), self.col_strike, [], rec_mgr_logger_its.getChild("AggForRecMgmt")) # type: ignore
-                
+
                 self.active_recommendations = self.rec_state_manager_module.manage_active_recommendations_v2_3( # type: ignore
                     active_recommendations=self.active_recommendations, # Pass current list
                     current_aggregated_mspi_df=aggregated_df_for_rec_mgmt, # Pass aggregated data
-                    current_price=current_underlying_price, 
-                    current_atr=current_atr, 
+                    current_price=current_underlying_price,
+                    current_atr=current_atr,
                     current_time=current_time, # Pass current time
                     config=self.config, # Pass the full ITS config dictionary
                     log_instance=rec_mgr_logger_its.getChild("CallManageActiveRecs_v231")
                 )
                 rec_mgr_logger_its.info(f"Managed active recommendations for '{symbol}'. Count after management: {len(self.active_recommendations)}")
-            else: 
+            else:
                 # Minimal fallback exit logic if the full rec_state_manager module/function is not available
                 rec_mgr_logger_its.warning(f"Recommendation state manager module or 'manage_active_recommendations_v2_3' function not available for '{symbol}'. Applying minimal exit logic.")
                 active_recs_post_minimal_exit_check: List[Dict[str, Any]] = []
                 for rec_item in self.active_recommendations:
-                    if str(rec_item.get('status', '')).startswith("EXITED_"): 
+                    if str(rec_item.get('status', '')).startswith("EXITED_"):
                         active_recs_post_minimal_exit_check.append(rec_item)
                         continue # Already exited
                     # Example minimal stop loss check
@@ -782,7 +783,7 @@ class IntegratedTradingSystem:
                 # The EKL module returns a dict, extract the list of levels.
                 all_identified_levels_list = current_key_levels_bundle.get("all_levels_sorted_by_strength", [])
                 levels_df_for_fallback = pd.DataFrame(all_identified_levels_list) if all_identified_levels_list else pd.DataFrame()
-                
+
                 newly_generated_recs_its, self.recommendation_id_counter = self.fallback_recs_module.get_strategy_recommendations_fallback( # type: ignore
                     symbol_arg_fallback=symbol,
                     mspi_df_aggregated_fallback=aggregated_df_for_new_recs, # Pass aggregated data
@@ -821,13 +822,13 @@ class IntegratedTradingSystem:
                                 is_duplicate_rec = True; break
                         except ValueError: # Error parsing timestamp
                             rec_mgr_logger_its.warning(f"Could not parse timestamp '{active_rec_item.get('timestamp')}' for active rec {active_rec_item.get('id')} during duplication check.")
-                
+
                 if not is_duplicate_rec:
                     self.active_recommendations.append(new_rec_item)
                     added_recs_count += 1
             if added_recs_count > 0:
                 rec_mgr_logger_its.info(f"Added {added_recs_count} new, non-duplicate recommendations to active list for '{symbol}'.")
-            
+
             # Store the updated ID counter for this symbol
             self.recommendation_id_counters_by_symbol[symbol] = self.recommendation_id_counter
 
@@ -836,7 +837,7 @@ class IntegratedTradingSystem:
                 current_sym_hist_ctx_its["recent_atr_values"].appendleft(current_atr) # Add to left (newest)
             # Update summary (can be expanded)
             current_sym_hist_ctx_its["summary_for_bundle"] = {
-                "last_atr": current_atr, 
+                "last_atr": current_atr,
                 "last_underlying_price": current_underlying_price,
                 "last_update_ts_ctx": datetime.now().isoformat()
             }
@@ -860,7 +861,7 @@ if __name__ == '__main__':
         test_formatter_detailed_its = logging.Formatter("[%(levelname)s] (%(name)s:%(funcName)s:%(lineno)d) %(asctime)s - %(message)s")
         test_handler_stdout_its.setFormatter(test_formatter_detailed_its)
         test_logger_its_main.addHandler(test_handler_stdout_its)
-        test_logger_its_main.propagate = False 
+        test_logger_its_main.propagate = False
         test_logger_its_main.setLevel(logging.DEBUG)
     else:
         test_logger_its_main = logging.getLogger("ITS_Standalone_Test_v231")
@@ -871,10 +872,10 @@ if __name__ == '__main__':
         if handler_its_mod: handler_its_mod.setLevel(logging.DEBUG)
 
     test_logger_its_main.info(f"--- Running IntegratedTradingSystem Standalone Test (Version: EOTS_ITS_v2.3.1_Canon_IDS_Sync_Logging) ---")
-    
+
     # Determine path to config_v2.json relative to this script, then project root
     script_dir_its_test = os.path.dirname(os.path.abspath(__file__))
-    project_root_dir_its_test = os.path.dirname(script_dir_its_test) 
+    project_root_dir_its_test = os.path.dirname(script_dir_its_test)
     test_config_file_path_its = os.path.join(project_root_dir_its_test, "config_v2.json")
     test_logger_its_main.info(f"Attempting to use config file for ITS test: '{test_config_file_path_its}'")
 
@@ -891,7 +892,7 @@ if __name__ == '__main__':
         sample_symbol_its_test = "TESTSYM_ITS_V231"
         sample_current_price_its_test = 150.75
         sample_fetch_ts_its_test = datetime.now().isoformat()
-        
+
         # Use ids.py for column names in sample data generation
         strike_col_name_sample = ids.COL_STRIKE if IDS_IMPORTED_SUCCESSFULLY_EDP else "strike_price" # Assuming EDP's ids load status for sample data
         opt_kind_col_name_sample = ids.COL_OPT_KIND if IDS_IMPORTED_SUCCESSFULLY_EDP else "opt_kind"
@@ -935,17 +936,17 @@ if __name__ == '__main__':
         sample_market_context_its = {
             "current_time": datetime.now().time(),
             "iv_and_quote_data": {
-                "current_iv": round(np.random.uniform(0.15,0.25),4), 
+                "current_iv": round(np.random.uniform(0.15,0.25),4),
                 "avg_5day_iv_tradier_approx": round(np.random.uniform(0.14,0.23),4),
                 (ids.CV_UND_PARAM_IV_PERCENTILE_30D if IDS_IMPORTED_SUCCESSFULLY_EDP else "iv_percentile_30d"): round(np.random.uniform(0,1),2)
             }
         }
         sample_ohlc_df_its = pd.DataFrame({
             'date': pd.to_datetime([datetime.now() - timedelta(days=i) for i in range(30, 0, -1)]), # 30 days of history
-            'open': np.random.uniform(sample_current_price_its_test-5, sample_current_price_its_test-2, 30), 
-            'high': np.random.uniform(sample_current_price_its_test, sample_current_price_its_test+3, 30), 
-            'low': np.random.uniform(sample_current_price_its_test-6, sample_current_price_its_test-1, 30), 
-            'close': np.random.uniform(sample_current_price_its_test-3, sample_current_price_its_test+2, 30), 
+            'open': np.random.uniform(sample_current_price_its_test-5, sample_current_price_its_test-2, 30),
+            'high': np.random.uniform(sample_current_price_its_test, sample_current_price_its_test+3, 30),
+            'low': np.random.uniform(sample_current_price_its_test-6, sample_current_price_its_test-1, 30),
+            'close': np.random.uniform(sample_current_price_its_test-3, sample_current_price_its_test+2, 30),
             'volume': np.random.randint(1e6,5e7,30)
         })
         sample_exp_calendar_its = [date.today() + timedelta(days=d) for d in [5, 12, 19, 26, 50, 80]]
@@ -962,13 +963,13 @@ if __name__ == '__main__':
         )
 
         test_logger_its_main.info("--- IntegratedTradingSystem Standalone Test (v2.3.1) Processing Results ---")
-        if not its_test_results_bundle: 
+        if not its_test_results_bundle:
             test_logger_its_main.error("ITS Processing returned NO results (empty dictionary). This is unexpected.")
-        
+
         test_logger_its_main.info(f"  --- Results for Symbol: {its_test_results_bundle.get('symbol')} ---")
         test_logger_its_main.info(f"    ITS Reported Error: {its_test_results_bundle.get('error')}")
         test_logger_its_main.info(f"    ITS Reported Traceback: {'Present' if its_test_results_bundle.get('traceback') else 'None'}")
-        
+
         final_df_obj_its_test = its_test_results_bundle.get("final_metric_rich_df_obj")
         if isinstance(final_df_obj_its_test, pd.DataFrame):
             test_logger_its_main.info(f"    'final_metric_rich_df_obj' DataFrame Shape: {final_df_obj_its_test.shape}")
@@ -977,7 +978,7 @@ if __name__ == '__main__':
                 test_logger_its_main.debug(f"      Sample of final_metric_rich_df_obj (head 1):\n{final_df_obj_its_test.head(1)}")
         else:
             test_logger_its_main.warning(f"    'final_metric_rich_df_obj' is NOT a DataFrame. Type: {type(final_df_obj_its_test)}")
-        
+
         processed_data_dict_its_test = its_test_results_bundle.get("processed_options_df", []) # This is list of dicts
         test_logger_its_main.debug(f"    Processed Options Data (list of dicts) Count: {len(processed_data_dict_its_test)}")
         key_levels_test = its_test_results_bundle.get("key_levels", {})
@@ -994,3 +995,5 @@ if __name__ == '__main__':
     except Exception as e_standalone_main_its_v231_exec:
         test_logger_its_main.critical(f"ITS Standalone Test SCRIPT CRASHED UNEXPECTEDLY: {e_standalone_main_its_v231_exec}", exc_info=True)
 
+
+[end of core_analytics/integrated_strategies_v2.py]

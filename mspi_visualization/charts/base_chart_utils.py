@@ -15,7 +15,7 @@ from plotly.subplots import make_subplots
 
 # Import the plot_utils module to access its functions
 # This assumes plot_utils.py is in the same parent directory or accessible via PYTHONPATH
-import plot_utils # This will be resolved by the calling environment.
+from .. import plot_utils # This will be resolved by the calling environment.
 
 
 def _build_volval_hovertemplate(
