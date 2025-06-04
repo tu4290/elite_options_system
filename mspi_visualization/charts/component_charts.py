@@ -17,7 +17,7 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
 # Import utility modules
-import plot_utils # Alias to plot_utils_module in function args
+from .. import plot_utils # Alias to plot_utils_module in function args
 import charts.base_chart_utils as base_chart_utils # Alias in function args
 
 def create_component_comparison(
@@ -74,7 +74,7 @@ def create_component_comparison(
     if d_tdpi_enabled: required_cols.append(tdpi_norm_col)
     if vri_2_0_enabled: required_cols.append(vri_norm_col)
     if e_sdag_enabled: required_cols.append(e_sdag_composite_norm_col)
-    
+
     # Add original SDAG components if their configs say to plot them here
     for comp_key, comp_detail_cfg in dag_method_configs_for_plot.items():
         if isinstance(comp_detail_cfg, dict) and comp_detail_cfg.get("enabled", False) and \
@@ -100,7 +100,7 @@ def create_component_comparison(
                                        extra_context={"Symbol": symbol, "Metric": col_mspi.replace("_"," ").title()})
         for _, row in plot_data.iterrows()
     ] if plot_utils_module._check_hover_enabled(hover_settings, "mspi_score_line_comp_chart") else None
-    
+
     mspi_line_color = default_bar_colors.get(col_mspi, {}).get("pos", default_bar_colors.get("mspi",{}).get("pos", "white")) # Try specific "mspi" key or a general "MSPI_Score" key
     fig.add_trace(go.Scatter(
         x=plot_data[col_strike], y=plot_data[col_mspi], name=col_mspi.replace("_"," ").title(),
@@ -129,7 +129,7 @@ def create_component_comparison(
         if comp_info["col"] not in plot_data.columns:
             chart_func_logger.warning(f"Component column '{comp_info['col']}' for '{comp_info['name']}' not found. Skipping trace.")
             continue
-        
+
         comp_hover_texts = [
             plot_utils_module._create_hover_text(row, f"{comp_info['name'].lower()}_bar_comp_chart", hover_settings, column_names_config, chart_func_logger,
                                            extra_context={"Symbol": symbol, "Metric": comp_info['name']})
@@ -140,7 +140,7 @@ def create_component_comparison(
         comp_color_cfg = default_bar_colors.get(comp_info["color_key"], {})
         bar_color_positive = comp_color_cfg.get("pos", "rgba(0,128,255,0.7)") # Default blueish
         bar_color_negative = comp_color_cfg.get("neg", "rgba(255,128,0,0.7)") # Default orangish
-        
+
         # Create separate traces for positive and negative parts for distinct colors if needed
         # Or, if plotly handles positive/negative colors for bars based on value, one trace is enough.
         # For simplicity with Plotly bars, often a single color is set per bar trace,
@@ -150,9 +150,9 @@ def create_component_comparison(
         # This typically implies separate traces or a more complex marker_color array.
         # For now, let's use a single color and assume it's a neutral one or the "positive" one.
         # TODO: Implement logic for pos/neg bar colors if strictly required by config structure.
-        
+
         # Simplified: use positive color for now
-        effective_bar_color = bar_color_positive 
+        effective_bar_color = bar_color_positive
 
         fig.add_trace(go.Bar(
             x=plot_data[col_strike], y=plot_data[comp_info["col"]], name=comp_info["name"],
@@ -169,7 +169,7 @@ def create_component_comparison(
     fig.update_layout(
         height=int(comp_chart_height), template=plotly_template,
         title=dict(text=chart_title, x=0.5, xanchor='center'),
-        barmode='relative', 
+        barmode='relative',
         xaxis_title="Strike Price",
         yaxis_title=f"{col_mspi.replace('_',' ').title()} (Line)",
         yaxis2_title="Component Scores (Bars)",
@@ -222,7 +222,7 @@ def create_combined_rolling_flow_chart(
     chart_height = chart_specific_params.get("combined_flow_chart_height", config.get("default_chart_height", 750))
     # Rolling intervals (e.g., "5m", "15m") are taken from the main config this time
     rolling_interval_suffixes: List[str] = config.get("rolling_intervals", ["5m", "15m", "30m", "60m"])
-    
+
     plotly_template = config.get("plotly_template", "plotly_dark")
     legend_config = config.get("legend_settings", {})
     # Color/style customization for rolling flow traces, e.g., {"5m": {"volume_positive_color": "...", ...}, "defaults": {...}}
@@ -243,7 +243,7 @@ def create_combined_rolling_flow_chart(
     for suffix in rolling_interval_suffixes:
         required_cols_flow.append(f"{bar_metric_prefix}_{suffix}")
         required_cols_flow.append(f"{area_metric_prefix}_{suffix}")
-    
+
     df_validated, cols_ok = plot_utils_module._ensure_columns(processed_data, list(set(required_cols_flow)), chart_func_logger)
     if not cols_ok or df_validated.empty:
         chart_func_logger.warning(f"Data for combined rolling flow chart for {symbol} is empty or missing required columns. Needed prefixes: {bar_metric_prefix}, {area_metric_prefix} with suffixes: {rolling_interval_suffixes}")
@@ -255,7 +255,7 @@ def create_combined_rolling_flow_chart(
     # --- Plot Traces for Each Interval ---
     for interval_suffix in rolling_interval_suffixes:
         interval_style_cfg = flow_customization_map.get(interval_suffix, flow_customization_map.get("defaults", {}))
-        
+
         # Bar Metric (e.g., Volume Flow)
         bar_col_name = f"{bar_metric_prefix}_{interval_suffix}"
         if bar_col_name in plot_data.columns:
@@ -264,7 +264,7 @@ def create_combined_rolling_flow_chart(
                                                extra_context={"Symbol": symbol, "Interval": interval_suffix, "Metric": bar_metric_prefix.upper()})
                 for _, row in plot_data.iterrows()
             ] if plot_utils_module._check_hover_enabled(hover_settings, f"{bar_metric_prefix}_{interval_suffix}_bar") else None
-            
+
             # Handle positive/negative bar colors if specified
             positive_bar_color = interval_style_cfg.get("volume_positive_color", "rgba(0,150,0,0.7)")
             negative_bar_color = interval_style_cfg.get("volume_negative_color", "rgba(200,0,0,0.7)")
@@ -272,7 +272,7 @@ def create_combined_rolling_flow_chart(
 
             # Create color array for bars based on value
             bar_colors_array = np.where(plot_data[bar_col_name] >= 0, positive_bar_color, negative_bar_color)
-            
+
             fig.add_trace(go.Bar(
                 x=plot_data[col_strike], y=plot_data[bar_col_name],
                 name=f"{bar_metric_prefix.replace('bs','').replace('mbs','').upper()} {interval_suffix}", # Cleaner name
@@ -295,14 +295,14 @@ def create_combined_rolling_flow_chart(
             negative_fill_color = interval_style_cfg.get("value_negative_fill_color", "rgba(255,0,0,0.2)")
             positive_line_color = interval_style_cfg.get("value_positive_line_color", "rgba(0,200,0,0.6)")
             negative_line_color = interval_style_cfg.get("value_negative_line_color", "rgba(255,0,0,0.6)")
-            
+
             # Plotly area charts (fill='tozeroy') don't directly support conditional fill colors based on y-value in a single trace.
             # A common workaround is to plot two traces: one for positive, one for negative, or use a simpler single color.
             # For simplicity, using a single representative fill/line color for the area trace per interval.
             # Let's use the "positive" colors as the primary representation.
             area_fill_color = positive_fill_color
             area_line_color = positive_line_color
-            
+
             fig.add_trace(go.Scatter(
                 x=plot_data[col_strike], y=plot_data[area_col_name],
                 name=f"{area_metric_prefix.replace('bs','').replace('mbs','').upper()} {interval_suffix}",
@@ -321,17 +321,17 @@ def create_combined_rolling_flow_chart(
         base_opacity = float(ghost_settings.get("base_opacity", 0.3))
         opacity_step = float(ghost_settings.get("opacity_step", 0.08))
         min_opacity = float(ghost_settings.get("min_opacity", 0.1))
-        
+
         primary_interval_suffix_for_ghost = rolling_interval_suffixes[0] # e.g., "5m"
         ghost_bar_col = f"{bar_metric_prefix}_{primary_interval_suffix_for_ghost}"
         ghost_area_col = f"{area_metric_prefix}_{primary_interval_suffix_for_ghost}"
 
         for i, (ts_hist, hist_df) in enumerate(list(component_history)[:num_ghosts]):
             if not isinstance(hist_df, pd.DataFrame) or hist_df.empty: continue
-            
+
             hist_df_sorted = hist_df.sort_values(by=col_strike)
             current_opacity = max(min_opacity, base_opacity - (i * opacity_step))
-            
+
             # Ghost for Bar Metric
             if ghost_bar_col in hist_df_sorted.columns:
                 bar_style_cfg_ghost = flow_customization_map.get(primary_interval_suffix_for_ghost, flow_customization_map.get("defaults", {}))
@@ -368,7 +368,7 @@ def create_combined_rolling_flow_chart(
 
     fig.update_layout(
         height=int(chart_height), template=plotly_template, title=dict(text=chart_title, x=0.5, xanchor='center'),
-        barmode=str(barmode_cfg), 
+        barmode=str(barmode_cfg),
         xaxis_title="Strike Price",
         yaxis_title=f"{bar_metric_prefix.replace('bs','').replace('mbs','').upper()} (Bars)",
         yaxis2_title=f"{area_metric_prefix.replace('bs','').replace('mbs','').upper()} (Area)",
@@ -383,7 +383,7 @@ def create_combined_rolling_flow_chart(
         upper_bound = current_price * (1 + effective_price_range_pct_val / 100)
         fig.update_xaxes(range=[lower_bound, upper_bound])
         chart_func_logger.info(f"Applied X-axis price range ({effective_price_range_pct_val}%): {lower_bound:.2f} - {upper_bound:.2f}")
-    
+
     if pd.notna(current_price) and price_line_config.get("show_current_price_line", True):
         plot_utils_module._add_price_line(
             fig, current_price,
@@ -395,6 +395,8 @@ def create_combined_rolling_flow_chart(
 
     if timestamp_config.get("enabled", True):
         plot_utils_module._add_timestamp_annotation(fig, chart_func_logger, timestamp_config)
-    
+
     chart_func_logger.info(f"Combined Rolling Flow chart for {symbol} generated successfully.")
     return fig
+
+[end of mspi_visualization/charts/component_charts.py]

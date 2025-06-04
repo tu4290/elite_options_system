@@ -9,6 +9,21 @@ Enhanced logging and strict ids.py adherence applied.
 """
 IDS_IMPORTED_SUCCESSFULLY_EDP = True # Define the flag directly in this module
 
+class DummyModule_ITS:
+    def __init__(self, module_name="Unknown"):
+        self._module_name = module_name
+        # Optionally, log that a dummy module is being used if a logger is available here
+        # print(f"Warning: Using DummyModule_ITS for {self._module_name}") # Or use logger if accessible
+
+    def __getattr__(self, name):
+        # This method is called when an attribute is accessed that is not found in the usual ways.
+        # Return a dummy function that does nothing or returns None.
+        # This helps prevent further errors if methods are called on the dummy module.
+        def dummy_method(*args, **kwargs):
+            # print(f"Warning: Dummy method {name} on DummyModule_ITS({self._module_name}) called with args: {args}, kwargs: {kwargs}") # Or use logger
+            return None
+        return dummy_method
+
 # --- Standard & Third-Party Imports ---
 import logging
 import json
@@ -76,35 +91,23 @@ except ImportError as e_rel_import_its_v231:
         exc_info=True
     )
     # Define DummyModule at the module level for fallback if critical imports fail
-    class DummyModule_ITS: # Suffixed to avoid clash
-        def __init__(self, module_that_failed_to_import_name="UnknownModule_ITS_Internal_v231"):
-            self._module_that_failed_to_import_name = module_that_failed_to_import_name
-            self.dummy_logger_its = logger_its_module.getChild(f"DummyModule_ITS.{self._module_that_failed_to_import_name}")
-            self.dummy_logger_its.error(f"Instantiated DummyModule_ITS for '{self._module_that_failed_to_import_name}' due to import failures.")
+    # Ensure logging is imported if not already (it is at the top of the file)
+    # class DummyModule_ITS: # This was the previous location, now moved to top
+    #     def __init__(self, name='dummy_module'):
+    #         self.name = name
+    #         self.instance_logger = logging.getLogger(f"DummyModule_ITS.{name}")
+    #         self.instance_logger.warning(f"Initialized DUMMY module: {name}")
 
-        def __getattr__(self, name: str) -> Callable[..., Any]:
-            def dummy_func_its(*args: Any, **kwargs: Any) -> Any:
-                log_msg = (f"Dummy function '{name}' called on DummyModule_ITS (original module "
-                           f"'{self._module_that_failed_to_import_name}' or its dependencies failed to import within ITS v2.3.1).")
-                self.dummy_logger_its.error(log_msg)
-                # Provide some default return types to prevent downstream crashes where possible
-                if name == "calculate_mspi_main":
-                    df_arg = next((arg for arg in args if isinstance(arg, pd.DataFrame)), pd.DataFrame())
-                    # Try to use ids.py if it loaded, otherwise string literal
-                    mspi_col_dummy = ids.COL_MSPI_SCORE if 'ids' in sys.modules and hasattr(sys.modules['ids'], 'COL_MSPI_SCORE') else "mspi"
-                    if mspi_col_dummy not in df_arg.columns and isinstance(df_arg, pd.DataFrame): df_arg[mspi_col_dummy] = 0.0
-                    df_arg["ERROR_DUMMY_ITS_MSPI_CALC_v231"] = log_msg
-                    return df_arg
-                if name == "identify_enhanced_key_levels_main": return {"error": log_msg, "all_levels_sorted_by_strength": []}
-                if name == "generate_trading_signals": return {"error": log_msg, "signals_generated_count": 0}
-                if name == "generate_adaptive_trade_ideas_main" or name == "get_strategy_recommendations_fallback": return [], 0 # (recs, next_id)
-                if name == "is_immediate_exit_warranted": return None # Exit reason or None
-                if name == "adjust_active_recommendation_parameters": return None # Modifies in-place
-                if name == "update_symbol_adaptive_historical_context":
-                    # Try to return the context dict if passed, else empty
-                    return next((arg for arg in args if isinstance(arg, dict) and "past_flow_delta" in arg), {})
-                return {"error": log_msg, "dummy_fallback_its_internal_v231": True} # Generic fallback
-            return dummy_func_its
+    #     def __getattr__(self, attr_name):
+    #         # This method is called when an attribute is not found in the usual places.
+    #         self.instance_logger.warning(f"DummyModule_ITS ('{self.name}'): Attribute '{attr_name}' accessed, returning a dummy method or None.")
+
+    #         # Return a dummy function that does nothing and can accept any arguments.
+    #         def dummy_method(*args, **kwargs):
+    #             self.instance_logger.info(f"Dummy method for '{attr_name}' called with args: {args}, kwargs: {kwargs}")
+    #             return None
+
+    #         return dummy_method
 
     # Fallback assignments if specific modules failed
     # Check if 'ids' itself failed, as it's critical
